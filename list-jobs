@@ -1,10 +1,11 @@
+#!/usr/bin/php
 <?php
-require "database.php";
-require "jobs.php";
-require "request.php";
+require "lib/database.php";
+require "lib/jobs.php";
+require "lib/request.php";
 
 // Get the Database instance and connection
-$db = Database::getInstance();
+$db = Database::getInstance('./db/seedstarsdb.db');
 $connection = $db->getConnection();
 
 // HTTP Request
