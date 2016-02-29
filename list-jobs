@@ -1,29 +1,24 @@
 #!/usr/bin/php
 <?php
-require "lib/database.php";
+date_default_timezone_set('Europe/Lisbon');
+
 require "lib/jobs.php";
 require "lib/request.php";
 
-// Get the Database instance and connection
-$db = Database::getInstance('./db/seedstarsdb.db');
-$connection = $db->getConnection();
-
 // HTTP Request
-$request = new Request('https://jenkins.qa.ubuntu.com/api/json?tree=jobs[name,lastBuild[result]]');
+$request = new Request('https://builds.apache.org/api/json?tree=jobs[name,lastBuild[result]]');
 
 // get the list of jobs from jenkins API
 $jobs = $request->getResults();
 
 // insert on database
 foreach ($jobs as $index => $job){
-  if ( $index >50 ) break;
-
-  $new_job = new Jobs( $connection, $job['name'], $job['lastBuild']['result'] );
+  $new_job = new Jobs($job['name'], $job['lastBuild']['result'] );
   $new_job->save();
 }
 
 // get all jobs from database
-$jobs = Jobs::findAll($connection);
+$jobs = Jobs::findAll();
 while ($job = $jobs->fetchArray())
 {
     echo $job['name']." ".$job['status']." ".$job["checked_date"] . PHP_EOL;

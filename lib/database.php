@@ -14,7 +14,7 @@ class Database {
   }
 
   // return the database instance
-  public static function getInstance( $file ) {
+  public static function getInstance( $file = './db/seedstarsdb.db' ) {
 		if(!self::$_instance) {
 			self::$_instance = new self( $file );
 		}
